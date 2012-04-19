@@ -61,4 +61,5 @@ client.chutes.remove({ id: 1354235 }, function(err){
 
 # Tests
 
+Run tests with:
 `mocha`

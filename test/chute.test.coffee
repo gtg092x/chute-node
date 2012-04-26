@@ -2,10 +2,10 @@ require 'should'
 
 Chute = require '../lib/chute'
 client = new Chute
-client.set token: '7b50e3bfce859eeaace42751eece7baaadc5ce4b3fb78afcc2eac73ef98c3e30', id: '4f90692666fd5a0fcb00001a', endpoint: 'http://api.getchute.com/v1'
+client.set token: '', id: '', endpoint: 'http://api.getchute.com/v1'
 
 chuteId = undefined
-testImage = '/Users/vadimdemedes/Desktop/Mercedes.png'
+testImage = '/Users/me/Desktop/image.png'
 
 describe 'Chutes', ->
 	it 'should create chute', (done) ->

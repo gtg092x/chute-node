@@ -12,7 +12,7 @@ Chute is obviously API client for [Chute](http://getchute.com).
 Chute = require 'chute'
 
 client = new Chute
-client.set token: 'your awesome access token'
+client.set token: 'your awesome access token', id: 'your awesome application id'
 
 client.chutes.all (err, chutes) ->
 	# chutes is an array of all chutes
@@ -55,7 +55,7 @@ client.parcels.create files: [{ filename: testImage, size: fs.statSync(testImage
 var Chute = require('chute');
 
 var client = new Chute;
-client.set({ token: 'your awesome access token' });
+client.set({ token: 'your awesome access token', id: 'your awesome application id' });
 
 client.chutes.all(function(err, chutes){
 	// chutes in an array of all chutes

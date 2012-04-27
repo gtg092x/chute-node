@@ -18,18 +18,121 @@ class Chute # Main class, client
 		@chutes = new Chutes @
 		@parcels = new Parcels @
 		@uploads = new Uploads @
-		###
 		@assets = new Assets @
 		@bundles = new Bundles @
-		###
+
+class Bundles
 	
+	constructor: (@client) -> # getting link to client and ability to read options
+	
+	create: (options, callback) -> # creating bundle of existing assets
+		request
+			url: "#{ @client.options.endpoint }/bundles"
+			method: 'POST'
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+			form:
+				asset_ids: JSON.stringify options.ids
+		, (err, res, body) ->
+			switch res.statusCode
+				when 201 then callback no, JSON.parse(body)
+				when 401 then callback 'invalid access token', {}
+				else callback JSON.parse(body).error, {}
+	
+	find: (options, callback) -> # finding a bundle, options should be { id: 135235 }
+		that = @
+		request
+			url: "#{ @client.options.endpoint }/bundles/#{ options.id or options.shortcut }"
+			method: 'GET'
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+		, (err, res, body) ->
+			switch res.statusCode
+				when 200 then callback no, JSON.parse(body).data
+				when 401 then callback 'invalid access token', {}
+				else callback JSON.parse(body).error, {}
+	
+	remove: (options, callback) ->
+		request
+			url: "#{ @client.options.endpoint }/bundles/#{ options.id or options.shortcut }"
+			method: 'DELETE'
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+		, (err, res, body) ->
+			switch res.statusCode
+				when 200 then callback no, {}
+				when 401 then callback 'invalid access token', {}
+				else callback JSON.parse(body).error, {}
+	
+class Assets
+	
+	constructor: (@client) -> # getting link to client and ability to read options
+	
+	find: (options, callback) -> # finding assets, options should be { id: 125235|'asfsdgdfg', chuteId: 2352435|'hrdgfdh', comments: yes|no }
+		that = @
+		request
+			url: "#{ @client.options.endpoint }/assets/#{ options.id or options.shortcut }"
+			method: 'GET'
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+		, (err, res, body) ->
+			switch res.statusCode
+				when 200
+					asset = JSON.parse(body).data
+					return callback no, asset if not options.comments
+					
+					request
+						url: "#{ that.client.options.endpoint }/chutes/#{ options.chuteId or options.chute }/assets/#{ options.id or options.shortcut }/comments"
+						method: 'GET'
+						headers:
+							'x-client_id': that.client.options.id
+							'Authorization': "OAUTH #{ that.client.options.token }"
+					, (err, res, body) ->
+						switch res.statusCode
+							when 200
+								asset.comments = JSON.parse(body).data
+								callback no, asset
+							when 401 then callback 'invalid access token', {}
+							else callback JSON.parse(body).error, {}
+				when 401 then callback 'invalid access token', {}
+				else callback JSON.parse(body).error, {}
+	
+	remove: (options, callback) -> # removing asset, options should be { id: 12352345|'sdfgsdfgsdfg' }
+		if options.id
+			url = "#{ @client.options.endpoint }/assets/#{ options.id or options.shortcut }"
+			method = 'DELETE'
+			form = {}
+		
+		if options.ids
+			url = "#{ @client.options.endpoint }/assets/remove"
+			method = 'POST'
+			form=
+				asset_ids: JSON.stringify(options.ids)
+		
+		request
+			url: url
+			method: method
+			form: form
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+		, (err, res, body) ->
+			switch res.statusCode
+				when 200 then callback no, JSON.parse(body).data
+				when 401 then callback 'invalid access token', {}
+				else callback JSON.parse(body).error, {}
+
 class Uploads
 	
 	constructor: (@client) -> # getting link to client and ability to read options
 	
 	generateToken: (options, callback) -> # generating token for upload
 		request
-			url: "#{ @client.options.endpoint }/uploads/#{ options.id }/token"
+			url: "#{ @client.options.endpoint }/uploads/#{ options.id or options.shortcut }/token"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
@@ -62,7 +165,7 @@ class Uploads
 	
 	complete: (options, callback) -> # finishing upload
 		request
-			url: "#{ @client.options.endpoint }/uploads/#{ options.id or options.asset_id }/complete"
+			url: "#{ @client.options.endpoint }/uploads/#{ options.id or options.asset_id or options.shortcut }/complete"
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
@@ -79,7 +182,7 @@ class Parcels
 	
 	find: (options, callback) -> # finding parcel, options should be { id: 1252345 }
 		request
-			url: "#{ @client.options.endpoint }/parcels/#{ options.id }"
+			url: "#{ @client.options.endpoint }/parcels/#{ options.id or options.shortcut }"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
@@ -124,9 +227,8 @@ class Chutes
 				else callback JSON.parse(body).error, []
 	
 	find: (options, callback) -> # finding only one chute, options should be { id: 1123123|'shortcut' }
-		id = options.id or options.shortcut
 		request
-			url: "#{ @client.options.endpoint }/chutes/#{ id }"
+			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id

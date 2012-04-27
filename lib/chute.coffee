@@ -1,5 +1,6 @@
 request = require 'request'
 fs = require 'fs'
+async = require 'async'
 
 class Chute # Main class, client
 	
@@ -100,6 +101,30 @@ class Assets
 							else callback JSON.parse(body).error, {}
 				when 401 then callback 'invalid access token', {}
 				else callback JSON.parse(body).error, {}
+	
+	heart: (options, callback) -> # heart an asset, options should be { id: 125235|'shortcut' }
+		request
+			url: "#{ @client.options.endpoint }/assets/#{ options.id or options.shortcut }/heart"
+			method: 'GET'
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+		, (err, res, body) ->
+			switch res.statusCode
+				when 200 then callback no
+				else callback yes
+	
+	unheart: (options, callback) -> # unheart an asset, options should be { id: 125235|'shortcut' }
+		request
+			url: "#{ @client.options.endpoint }/assets/#{ options.id or options.shortcut }/unheart"
+			method: 'GET'
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+		, (err, res, body) ->
+			switch res.statusCode
+				when 200 then callback no
+				else callback yes
 	
 	remove: (options, callback) -> # removing asset, options should be { id: 12352345|'sdfgsdfgsdfg' }
 		if options.id
@@ -226,7 +251,36 @@ class Chutes
 				when 401 then callback 'invalid access token', []
 				else callback JSON.parse(body).error, []
 	
+	addAssets: (options, callback) -> # adding assets to a specific chute, options should be { id: 1235235|'shortcut', ids: [], assets: [] }
+		request
+			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/assets/add"
+			method: 'POST'
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+			form:
+				asset_ids: JSON.stringify(options.ids or options.assets)
+		, (err, res, body) ->
+			switch res.statusCode
+				when 200 then callback no
+				else callback yes
+	
+	removeAssets: (options, callback) -> # removing assets to a specific chute, options should be { id: 1235235|'shortcut', ids: [], assets: [] }
+		request
+			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/assets/remove"
+			method: 'POST'
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+			form:
+				asset_ids: JSON.stringify(options.ids or options.assets)
+		, (err, res, body) ->
+			switch res.statusCode
+				when 200 then callback no
+				else callback yes
+	
 	find: (options, callback) -> # finding only one chute, options should be { id: 1123123|'shortcut' }
+		that = @
 		request
 			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }"
 			method: 'GET'
@@ -235,7 +289,59 @@ class Chutes
 				'Authorization': "OAUTH #{ @client.options.token }"
 		, (err, res, body) ->
 			switch res.statusCode
-				when 200 then callback no, JSON.parse(body).data
+				when 200
+					chute = JSON.parse(body).data
+					return callback no, chute if not (options.contributors or options.members or options.parcels)
+					
+					findContributors = (done) ->
+						request
+							url: "#{ that.client.options.endpoint }/chutes/#{ options.id or options.shortcut }/contributors"
+							method: 'GET'
+							headers:
+								'x-client_id': that.client.options.id
+								'Authorization': "OAUTH #{ that.client.options.token }"
+						, (err, res, body) ->
+							chute.contributors = switch res.statusCode
+								when 200 then JSON.parse(body).data
+								else []
+							
+							do done
+					
+					findMembers = (done) ->
+						request
+							url: "#{ that.client.options.endpoint }/chutes/#{ options.id or options.shortcut }/members"
+							method: 'GET'
+							headers:
+								'x-client_id': that.client.options.id
+								'Authorization': "OAUTH #{ that.client.options.token }"
+						, (err, res, body) ->
+							chute.members = switch res.statusCode
+								when 200 then JSON.parse(body).data
+								else []
+							
+							do done
+					
+					findParcels = (done) ->
+						request
+							url: "#{ that.client.options.endpoint }/chutes/#{ options.id or options.shortcut }/parcels"
+							method: 'GET'
+							headers:
+								'x-client_id': that.client.options.id
+								'Authorization': "OAUTH #{ that.client.options.token }"
+						, (err, res, body) ->
+							chute.parcels = switch res.statusCode
+								when 200 then JSON.parse(body).data
+								else []
+							
+							do done
+					
+					methods = []
+					methods.push findContributors if options.contributors
+					methods.push findMembers if options.members
+					methods.push findParcels if options.parcels
+					
+					async.parallel methods, ->
+						callback no, chute
 				when 401 then callback 'invalid access token', []
 				else callback JSON.parse(body).error, []
 	

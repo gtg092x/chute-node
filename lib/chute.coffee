@@ -2,6 +2,34 @@ request = require 'request'
 fs = require 'fs'
 async = require 'async'
 
+# Monkey patching for asset URLs
+
+String::width = (width) ->
+	@options = {} if not @options
+	@options.width = width
+	@
+
+String::height = (height) ->
+	@options = {} if not @options
+	@options.height = height
+	@
+
+String::fit = ->
+	@options = {} if not @options
+	@options.fit = yes
+	@
+
+String::build = ->
+	type = if @options.fit then 'fit' else 'fill'
+	type = 'fixed width' if @options.width and not @options.height
+	type = 'fixed height' if @options.height and not @options.width 
+	switch type
+		when 'fit' then "#{ @ }/fit/#{ @options.width }x#{ @options.height }"
+		when 'fixed width' then "#{ @ }/w/#{ @options.width }"
+		when 'fixed height' then "#{ @ }/h/#{ @options.height }"
+		when 'fill' then "#{ @ }/#{ @options.width }x#{ @options.height }"
+		else @
+
 class Chute # Main class, client
 	
 	constructor: (options = {}) ->
@@ -21,6 +49,20 @@ class Chute # Main class, client
 		@uploads = new Uploads @
 		@assets = new Assets @
 		@bundles = new Bundles @
+	
+	search: (options, callback) -> # general search method
+		options.type = 'all' if not options.type
+		request
+			url: "#{ @options.endpoint }/meta/#{ options.type }/#{ options.key }"
+			method: 'GET'
+			headers:
+				'x-client_id': @options.id
+				'Authorization': "OAUTH #{ @options.token }"
+		, (err, res, body) ->
+			switch res.statusCode
+				when 201 then callback no, JSON.parse(body).data
+				when 401 then callback 'invalid access token', {}
+				else callback JSON.parse(body).error, {}
 
 class Bundles
 	
@@ -125,6 +167,9 @@ class Assets
 			switch res.statusCode
 				when 200 then callback no
 				else callback yes
+	
+	search: (options, callback) -> # searching for assets, options should be { key: 'id' }
+		@client.search type: 'assets', key: options.key, callback
 	
 	remove: (options, callback) -> # removing asset, options should be { id: 12352345|'sdfgsdfgsdfg' }
 		if options.id
@@ -233,6 +278,9 @@ class Parcels
 				when 201 then callback no, JSON.parse body
 				when 401 then callback 'invalid access token', []
 				else callback JSON.parse(body).error, []
+	
+	search: (options, callback) -> # searching for parcels, options should be { key: 'id' }
+		@client.search type: 'parcels', key: options.key, callback
 
 class Chutes
 	
@@ -374,6 +422,9 @@ class Chutes
 				when 200 then callback no, JSON.parse(body).data
 				when 401 then callback 'invalid access token', {}
 				else callback JSON.parse(body).error, {}
+	
+	search: (options, callback) -> # searching for chutes, options should be { key: 'id' }
+		@client.search type: 'chutes', key: options.key, callback
 	
 	remove: (options, callback) -> # removing chute, options should be { id: 123235|'shortcut' }
 		request

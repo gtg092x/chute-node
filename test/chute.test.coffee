@@ -3,10 +3,10 @@ fs = require 'fs'
 
 Chute = require '../lib/chute'
 client = new Chute
-client.set token: '7b50e3bfce859eeaace42751eece7baaadc5ce4b3fb78afcc2eac73ef98c3e30', id: '4f90692666fd5a0fcb00001a', endpoint: 'http://api.getchute.com/v1'
+client.set token: 'access token', id: 'app id', endpoint: 'http://api.getchute.com/v1'
 
 assetId = parcelId = chuteId = bundleId = undefined
-testImage = '/Users/vadimdemedes/Desktop/Flower.jpg'
+testImage = '/Users/me/Desktop/Flower.jpg'
 
 describe 'Chutes', ->
 	it 'should create chute', (done) ->

@@ -101,6 +101,16 @@ client.assets.find id: 12345, comments: yes, (err, asset) -> # asset with ID=123
 	asset.comments
 ```
 
+Customize:
+
+```coffee-script
+client.assets.find id: 12345, (err, asset) ->
+	asset.url.width(640).build() # http://media.getchute.com/media/:id/w/640
+	asset.url.height(480).build() # http://media.getchute.com/media/:id/h/480
+	asset.url.width(640).height(480).build() # http://media.getchute.com/media/:id/640x480
+	asset.url.width(640).height(480).fit().build() # http://media.getchute.com/media/:id/fit/640x480
+```
+
 Like:
 
 ```coffee-script

@@ -2,33 +2,19 @@ request = require 'request'
 fs = require 'fs'
 async = require 'async'
 
-# Monkey patching for asset URLs
+# Methods for asset URLs
 
 String::width = (width) ->
-	@options = {} if not @options
-	@options.width = width
-	@
-
+	"#{ @ }/w/#{ width }"
+	
 String::height = (height) ->
-	@options = {} if not @options
-	@options.height = height
-	@
+	"#{ @ }/h/#{ height }"
 
-String::fit = ->
-	@options = {} if not @options
-	@options.fit = yes
-	@
+String::fit = (width, height) ->
+	"#{ @ }/fit/#{ width }x#{ height }"
 
-String::build = ->
-	type = if @options.fit then 'fit' else 'fill'
-	type = 'fixed width' if @options.width and not @options.height
-	type = 'fixed height' if @options.height and not @options.width 
-	switch type
-		when 'fit' then "#{ @ }/fit/#{ @options.width }x#{ @options.height }"
-		when 'fixed width' then "#{ @ }/w/#{ @options.width }"
-		when 'fixed height' then "#{ @ }/h/#{ @options.height }"
-		when 'fill' then "#{ @ }/#{ @options.width }x#{ @options.height }"
-		else @
+String::fill = (width, height) ->
+	"#{ @ }/#{ width }x#{ height }"
 
 class Chute # Main class, client
 	

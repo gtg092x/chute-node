@@ -105,10 +105,10 @@ Customize:
 
 ```coffee-script
 client.assets.find id: 12345, (err, asset) ->
-	asset.url.width(640).build() # http://media.getchute.com/media/:id/w/640
-	asset.url.height(480).build() # http://media.getchute.com/media/:id/h/480
-	asset.url.width(640).height(480).build() # http://media.getchute.com/media/:id/640x480
-	asset.url.width(640).height(480).fit().build() # http://media.getchute.com/media/:id/fit/640x480
+	asset.url.width(640) # http://media.getchute.com/media/:id/w/640
+	asset.url.height(480) # http://media.getchute.com/media/:id/h/480
+	asset.url.fill(640, 480) # http://media.getchute.com/media/:id/640x480
+	asset.url.fit(640, 480) # http://media.getchute.com/media/:id/fit/640x480
 ```
 
 Like:
@@ -289,10 +289,10 @@ Customize:
 
 ```javascript
 client.assets.find({ id: 12345 }, function(err, asset){
-	asset.url.width(640).build() // http://media.getchute.com/media/:id/w/640
-	asset.url.height(480).build() // http://media.getchute.com/media/:id/h/480
-	asset.url.width(640).height(480).build() // http://media.getchute.com/media/:id/640x480
-	asset.url.width(640).height(480).fit().build() // http://media.getchute.com/media/:id/fit/640x480
+	asset.url.width(640) // http://media.getchute.com/media/:id/w/640
+	asset.url.height(480) // http://media.getchute.com/media/:id/h/480
+	asset.url.fill(640, 480) // http://media.getchute.com/media/:id/640x480
+	asset.url.fit(640, 480) // http://media.getchute.com/media/:id/fit/640x480
 });
 ```
 

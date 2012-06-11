@@ -8,8 +8,8 @@
 		"node": ">=0.4"
 	},
 	"dependencies": {
-		"request": "*",
-		"async": "*"
+		"request": "2.9.202",
+		"async": "0.1.22"
 	},
 	"devDependencies": {
 		"mocha": "*",

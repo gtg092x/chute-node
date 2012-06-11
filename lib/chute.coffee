@@ -21,6 +21,7 @@ class Chute # Main class, client
 	constructor: (options = {}) ->
 		@options= # setting default options
 			endpoint: 'http://api.getchute.com/v1'
+		
 		@set options
 	
 	set: (options = {}) ->
@@ -38,6 +39,7 @@ class Chute # Main class, client
 	
 	search: (options, callback) -> # general search method
 		options.type = 'all' if not options.type
+		
 		request
 			url: "#{ @options.endpoint }/meta/#{ options.type }/#{ options.key }"
 			method: 'GET'
@@ -51,7 +53,6 @@ class Chute # Main class, client
 				else callback JSON.parse(body).error, {}
 
 class Bundles
-	
 	constructor: (@client) -> # getting link to client and ability to read options
 	
 	create: (options, callback) -> # creating bundle of existing assets
@@ -70,7 +71,6 @@ class Bundles
 				else callback JSON.parse(body).error, {}
 	
 	find: (options, callback) -> # finding a bundle, options should be { id: 135235 }
-		that = @
 		request
 			url: "#{ @client.options.endpoint }/bundles/#{ options.id or options.shortcut }"
 			method: 'GET'
@@ -97,29 +97,27 @@ class Bundles
 				else callback JSON.parse(body).error, {}
 	
 class Assets
-	
 	constructor: (@client) -> # getting link to client and ability to read options
 	
 	find: (options, callback) -> # finding assets, options should be { id: 125235|'asfsdgdfg', chuteId: 2352435|'hrdgfdh', comments: yes|no }
-		that = @
 		request
 			url: "#{ @client.options.endpoint }/assets/#{ options.id or options.shortcut }"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
 				'Authorization': "OAUTH #{ @client.options.token }"
-		, (err, res, body) ->
+		, (err, res, body) =>
 			switch res.statusCode
 				when 200
 					asset = JSON.parse(body).data
 					return callback no, asset if not options.comments
 					
 					request
-						url: "#{ that.client.options.endpoint }/chutes/#{ options.chuteId or options.chute }/assets/#{ options.id or options.shortcut }/comments"
+						url: "#{ @client.options.endpoint }/chutes/#{ options.chuteId or options.chute }/assets/#{ options.id or options.shortcut }/comments"
 						method: 'GET'
 						headers:
-							'x-client_id': that.client.options.id
-							'Authorization': "OAUTH #{ that.client.options.token }"
+							'x-client_id': @client.options.id
+							'Authorization': "OAUTH #{ @client.options.token }"
 					, (err, res, body) ->
 						switch res.statusCode
 							when 200
@@ -183,7 +181,6 @@ class Assets
 				else callback JSON.parse(body).error, {}
 
 class Uploads
-	
 	constructor: (@client) -> # getting link to client and ability to read options
 	
 	generateToken: (options, callback) -> # generating token for upload
@@ -232,8 +229,7 @@ class Uploads
 				when 401 then callback 'invalid access token', {}
 				else callback JSON.parse(body).error, {}
 
-class Parcels
-	
+class Parcels	
 	constructor: (@client) -> # getting link to client and ability to read options
 	
 	find: (options, callback) -> # finding parcel, options should be { id: 1252345 }
@@ -269,7 +265,6 @@ class Parcels
 		@client.search type: 'parcels', key: options.key, callback
 
 class Chutes
-	
 	constructor: (@client) -> # getting link to client and ability to get options
 	
 	all: (callback) -> # getting all chutes
@@ -314,26 +309,25 @@ class Chutes
 				else callback yes
 	
 	find: (options, callback) -> # finding only one chute, options should be { id: 1123123|'shortcut' }
-		that = @
 		request
 			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
 				'Authorization': "OAUTH #{ @client.options.token }"
-		, (err, res, body) ->
+		, (err, res, body) =>
 			switch res.statusCode
 				when 200
 					chute = JSON.parse(body).data
 					return callback no, chute if not (options.contributors or options.members or options.parcels)
 					
-					findContributors = (done) ->
+					findContributors = (done) =>
 						request
-							url: "#{ that.client.options.endpoint }/chutes/#{ options.id or options.shortcut }/contributors"
+							url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/contributors"
 							method: 'GET'
 							headers:
-								'x-client_id': that.client.options.id
-								'Authorization': "OAUTH #{ that.client.options.token }"
+								'x-client_id': @client.options.id
+								'Authorization': "OAUTH #{ @client.options.token }"
 						, (err, res, body) ->
 							chute.contributors = switch res.statusCode
 								when 200 then JSON.parse(body).data
@@ -341,13 +335,13 @@ class Chutes
 							
 							do done
 					
-					findMembers = (done) ->
+					findMembers = (done) =>
 						request
-							url: "#{ that.client.options.endpoint }/chutes/#{ options.id or options.shortcut }/members"
+							url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/members"
 							method: 'GET'
 							headers:
-								'x-client_id': that.client.options.id
-								'Authorization': "OAUTH #{ that.client.options.token }"
+								'x-client_id': @client.options.id
+								'Authorization': "OAUTH #{ @client.options.token }"
 						, (err, res, body) ->
 							chute.members = switch res.statusCode
 								when 200 then JSON.parse(body).data
@@ -355,13 +349,13 @@ class Chutes
 							
 							do done
 					
-					findParcels = (done) ->
+					findParcels = (done) =>
 						request
-							url: "#{ that.client.options.endpoint }/chutes/#{ options.id or options.shortcut }/parcels"
+							url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/parcels"
 							method: 'GET'
 							headers:
-								'x-client_id': that.client.options.id
-								'Authorization': "OAUTH #{ that.client.options.token }"
+								'x-client_id': @client.options.id
+								'Authorization': "OAUTH #{ @client.options.token }"
 						, (err, res, body) ->
 							chute.parcels = switch res.statusCode
 								when 200 then JSON.parse(body).data
@@ -374,8 +368,7 @@ class Chutes
 					methods.push findMembers if options.members
 					methods.push findParcels if options.parcels
 					
-					async.parallel methods, ->
-						callback no, chute
+					async.parallel methods, -> callback no, chute
 				when 401 then callback 'invalid access token', []
 				else callback JSON.parse(body).error, []
 	

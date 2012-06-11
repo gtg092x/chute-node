@@ -1,7 +1,7 @@
 require 'should'
 fs = require 'fs'
 
-Chute = require '../lib/chute'
+Chute = require '../'
 client = new Chute
 client.set token: 'access token', id: 'app id', endpoint: 'http://api.getchute.com/v1'
 

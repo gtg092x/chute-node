@@ -4,23 +4,17 @@ async = require 'async'
 
 # Methods for asset URLs
 
-String::width = (width) ->
-	"#{ @ }/w/#{ width }"
+String::width = (width) -> "#{ @ }/w/#{ width }"
 	
-String::height = (height) ->
-	"#{ @ }/h/#{ height }"
+String::height = (height) -> "#{ @ }/h/#{ height }"
 
-String::fit = (width, height) ->
-	"#{ @ }/fit/#{ width }x#{ height }"
+String::fit = (width, height) -> "#{ @ }/fit/#{ width }x#{ height }"
 
-String::fill = (width, height) ->
-	"#{ @ }/#{ width }x#{ height }"
+String::fill = (width, height) -> "#{ @ }/#{ width }x#{ height }"
 
 class Chute # Main class, client
-	
 	constructor: (options = {}) ->
-		@options= # setting default options
-			endpoint: 'http://api.getchute.com/v1'
+		@options = {}
 		
 		@set options
 	
@@ -32,7 +26,6 @@ class Chute # Main class, client
 	
 	initializeResources: ->
 		@chutes = new Chutes @
-		@parcels = new Parcels @
 		@uploads = new Uploads @
 		@assets = new Assets @
 		@bundles = new Bundles @
@@ -41,7 +34,7 @@ class Chute # Main class, client
 		options.type = 'all' if not options.type
 		
 		request
-			url: "#{ @options.endpoint }/meta/#{ options.type }/#{ options.key }"
+			url: "http://api.getchute.com/v1/meta/#{ options.type }/#{ options.key }"
 			method: 'GET'
 			headers:
 				'x-client_id': @options.id
@@ -57,7 +50,7 @@ class Bundles
 	
 	create: (options, callback) -> # creating bundle of existing assets
 		request
-			url: "#{ @client.options.endpoint }/bundles"
+			url: "http://api.getchute.com/v1/bundles"
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
@@ -72,7 +65,7 @@ class Bundles
 	
 	find: (options, callback) -> # finding a bundle, options should be { id: 135235 }
 		request
-			url: "#{ @client.options.endpoint }/bundles/#{ options.id or options.shortcut }"
+			url: "http://api.getchute.com/v1/bundles/#{ options.id or options.shortcut }"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
@@ -85,7 +78,7 @@ class Bundles
 	
 	remove: (options, callback) ->
 		request
-			url: "#{ @client.options.endpoint }/bundles/#{ options.id or options.shortcut }"
+			url: "http://api.getchute.com/v1/bundles/#{ options.id or options.shortcut }"
 			method: 'DELETE'
 			headers:
 				'x-client_id': @client.options.id
@@ -101,7 +94,7 @@ class Assets
 	
 	find: (options, callback) -> # finding assets, options should be { id: 125235|'asfsdgdfg', chuteId: 2352435|'hrdgfdh', comments: yes|no }
 		request
-			url: "#{ @client.options.endpoint }/assets/#{ options.id or options.shortcut }"
+			url: "http://api.getchute.com/v1/assets/#{ options.id or options.shortcut }"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
@@ -113,7 +106,7 @@ class Assets
 					return callback no, asset if not options.comments
 					
 					request
-						url: "#{ @client.options.endpoint }/chutes/#{ options.chuteId or options.chute }/assets/#{ options.id or options.shortcut }/comments"
+						url: "http://api.getchute.com/v1/chutes/#{ options.chuteId or options.chute }/assets/#{ options.id or options.shortcut }/comments"
 						method: 'GET'
 						headers:
 							'x-client_id': @client.options.id
@@ -130,7 +123,7 @@ class Assets
 	
 	heart: (options, callback) -> # heart an asset, options should be { id: 125235|'shortcut' }
 		request
-			url: "#{ @client.options.endpoint }/assets/#{ options.id or options.shortcut }/heart"
+			url: "http://api.getchute.com/v1/assets/#{ options.id or options.shortcut }/heart"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
@@ -142,7 +135,7 @@ class Assets
 	
 	unheart: (options, callback) -> # unheart an asset, options should be { id: 125235|'shortcut' }
 		request
-			url: "#{ @client.options.endpoint }/assets/#{ options.id or options.shortcut }/unheart"
+			url: "http://api.getchute.com/v1/assets/#{ options.id or options.shortcut }/unheart"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
@@ -157,12 +150,12 @@ class Assets
 	
 	remove: (options, callback) -> # removing asset, options should be { id: 12352345|'sdfgsdfgsdfg' }
 		if options.id
-			url = "#{ @client.options.endpoint }/assets/#{ options.id or options.shortcut }"
+			url = "http://api.getchute.com/v1/assets/#{ options.id or options.shortcut }"
 			method = 'DELETE'
 			form = {}
 		
 		if options.ids
-			url = "#{ @client.options.endpoint }/assets/remove"
+			url = "http://api.getchute.com/v1/assets/remove"
 			method = 'POST'
 			form=
 				asset_ids: JSON.stringify(options.ids)
@@ -180,96 +173,55 @@ class Assets
 				when 401 then callback 'invalid access token', {}
 				else callback JSON.parse(body).error, {}
 
+
 class Uploads
 	constructor: (@client) -> # getting link to client and ability to read options
 	
-	generateToken: (options, callback) -> # generating token for upload
+	upload: (options, callback) -> # generating token for an upload
 		request
-			url: "#{ @client.options.endpoint }/uploads/#{ options.id or options.shortcut }/token"
-			method: 'GET'
-			headers:
-				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
-		, (err, res, body) ->
-			switch res.statusCode
-				when 200 then callback no, JSON.parse body
-				when 401 then callback 'invalid access token', {}
-				else callback JSON.parse(body).error, {}
-	
-	upload: (options, callback) -> # uploading to S3 using provided signed URL
-		remote = request
-			url: options.upload_url
-			method: 'PUT'
-			headers:
-				'Authorization': options.signature
-				'Date': options.date
-				'Content-Type': options.content_type
-				'Content-Length': options.md5
-				'x-amz-acl': 'public-read'
-		, (err, res, body) ->
-			if body is ''
-				callback no if callback
-			else
-				callback body if callback
-		
-		stream = fs.createReadStream options.file_path
-		
-		stream.pipe remote
-	
-	complete: (options, callback) -> # finishing upload
-		request
-			url: "#{ @client.options.endpoint }/uploads/#{ options.id or options.asset_id or options.shortcut }/complete"
+			url: "http://api.getchute.com/v2/uploads"
 			method: 'POST'
+			body: JSON.stringify(files: options.files, chutes: options.chutes)
 			headers:
 				'x-client_id': @client.options.id
 				'Authorization': "OAUTH #{ @client.options.token }"
-		, (err, res, body) ->
-			switch res.statusCode
-				when 200 then callback no, JSON.parse body
-				when 401 then callback 'invalid access token', {}
-				else callback JSON.parse(body).error, {}
-
-class Parcels	
-	constructor: (@client) -> # getting link to client and ability to read options
-	
-	find: (options, callback) -> # finding parcel, options should be { id: 1252345 }
-		request
-			url: "#{ @client.options.endpoint }/parcels/#{ options.id or options.shortcut }"
-			method: 'GET'
-			headers:
-				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
-		, (err, res, body) ->
-			switch res.statusCode
-				when 200 then callback no, JSON.parse body
-				when 401 then callback 'invalid access token', {}
-				else callback JSON.parse(body).error, {}
-	
-	create: (options, callback) -> # creating parcel, options should be { files: [], assets: [], chutes: [] }
-		request
-			url: "#{ @client.options.endpoint }/parcels"
-			method: 'POST'
-			headers:
-				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
-			form:
-				files: JSON.stringify options.files
-				chutes: JSON.stringify options.chutes
-		, (err, res, body) ->
-			switch res.statusCode
-				when 201 then callback no, JSON.parse body
-				when 401 then callback 'invalid access token', []
-				else callback JSON.parse(body).error, []
-	
-	search: (options, callback) -> # searching for parcels, options should be { key: 'id' }
-		@client.search type: 'parcels', key: options.key, callback
+		, (err, res, body) =>
+			return callback(err) if res.statusCode != 200
+			body = JSON.parse(body).data
+			
+			assetIds = [] # pushing asset ids and returning them at the end
+			
+			assetIds.push(asset.id) for asset in body.existing_assets
+			
+			async.forEach body.new_assets, (asset, nextAsset) =>
+				assetIds.push asset.id
+				
+				fs.readFile asset.upload_info.file_path, (err, file) ->
+					request
+						url: asset.upload_info.upload_url
+						method: 'PUT'
+						headers:
+							'Authorization': asset.upload_info.signature
+							'Date': asset.upload_info.date
+							'Content-Type': asset.upload_info.content_type
+							'x-amz-acl': 'public-read'
+						body: file # Buffer
+					, (err, res, body) -> do nextAsset
+			, =>
+				request
+					url: "http://api.getchute.com/v2/uploads/#{ body.id }/complete"
+					method: 'POST'
+					headers:
+						'x-client_id': @client.options.id
+						'Authorization': "OAUTH #{ @client.options.token }"
+				, (err, res, body) -> callback err, assetIds
 
 class Chutes
 	constructor: (@client) -> # getting link to client and ability to get options
 	
 	all: (callback) -> # getting all chutes
 		request
-			url: "#{ @client.options.endpoint }/me/chutes"
+			url: "http://api.getchute.com/v1/me/chutes"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
@@ -282,7 +234,7 @@ class Chutes
 	
 	addAssets: (options, callback) -> # adding assets to a specific chute, options should be { id: 1235235|'shortcut', ids: [], assets: [] }
 		request
-			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/assets/add"
+			url: "http://api.getchute.com/v1/chutes/#{ options.id or options.shortcut }/assets/add"
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
@@ -296,7 +248,7 @@ class Chutes
 	
 	removeAssets: (options, callback) -> # removing assets to a specific chute, options should be { id: 1235235|'shortcut', ids: [], assets: [] }
 		request
-			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/assets/remove"
+			url: "http://api.getchute.com/v1/chutes/#{ options.id or options.shortcut }/assets/remove"
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
@@ -310,7 +262,7 @@ class Chutes
 	
 	find: (options, callback) -> # finding only one chute, options should be { id: 1123123|'shortcut' }
 		request
-			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }"
+			url: "http://api.getchute.com/v1/chutes/#{ options.id or options.shortcut }"
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
@@ -323,7 +275,7 @@ class Chutes
 					
 					findContributors = (done) =>
 						request
-							url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/contributors"
+							url: "http://api.getchute.com/v1/chutes/#{ options.id or options.shortcut }/contributors"
 							method: 'GET'
 							headers:
 								'x-client_id': @client.options.id
@@ -337,7 +289,7 @@ class Chutes
 					
 					findMembers = (done) =>
 						request
-							url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/members"
+							url: "http://api.getchute.com/v1/chutes/#{ options.id or options.shortcut }/members"
 							method: 'GET'
 							headers:
 								'x-client_id': @client.options.id
@@ -351,7 +303,7 @@ class Chutes
 					
 					findParcels = (done) =>
 						request
-							url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }/parcels"
+							url: "http://api.getchute.com/v1/chutes/#{ options.id or options.shortcut }/parcels"
 							method: 'GET'
 							headers:
 								'x-client_id': @client.options.id
@@ -374,7 +326,7 @@ class Chutes
 	
 	create: (options, callback) -> # creating chute, options should be { name: 'Name of the Chute' }
 		request
-			url: "#{ @client.options.endpoint }/chutes"
+			url: "http://api.getchute.com/v1/chutes"
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
@@ -389,7 +341,7 @@ class Chutes
 	
 	update: (options, callback) -> # updating chute, options should be { name: 'New name for the Chute', id: 1243234|'shortcut' }
 		request
-			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }"
+			url: "http://api.getchute.com/v1/chutes/#{ options.id or options.shortcut }"
 			method: 'PUT'
 			headers:
 				'x-client_id': @client.options.id
@@ -407,7 +359,7 @@ class Chutes
 	
 	remove: (options, callback) -> # removing chute, options should be { id: 123235|'shortcut' }
 		request
-			url: "#{ @client.options.endpoint }/chutes/#{ options.id or options.shortcut }"
+			url: "http://api.getchute.com/v1/chutes/#{ options.id or options.shortcut }"
 			method: 'DELETE'
 			headers:
 				'x-client_id': @client.options.id

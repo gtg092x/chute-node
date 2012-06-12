@@ -3,10 +3,10 @@ fs = require 'fs'
 
 Chute = require '../'
 client = new Chute
-client.set token: 'access token', id: 'app id', endpoint: 'http://api.getchute.com/v1'
+client.set token: 'access token', id: 'app id' # fill in your auth credentials
 
 assetId = parcelId = chuteId = bundleId = undefined
-testImage = '/Users/me/Desktop/Flower.jpg'
+testImage = '/Users/me/Desktop/Eye.jpg' # put some test image here
 
 describe 'Chutes', ->
 	it 'should create chute', (done) ->
@@ -52,23 +52,13 @@ describe 'Chutes', ->
 
 describe 'Uploads', ->
 	before (done) ->
-		client.chutes.create name: 'Flowers', (err, chute) ->
+		client.chutes.create name: 'Beach', (err, chute) ->
 			chuteId = chute.id
 			do done
 	
-	it 'should create parcel and upload files', (done) ->
-		client.parcels.create files: [{ filename: testImage, size: fs.statSync(testImage).size, md5: fs.statSync(testImage).size }], chutes: [chuteId], (err, parcel) ->
-			assetId = parcel.uploads[0].asset_id
-			parcelId = parcel.id
-			client.uploads.generateToken id: parcel.uploads[0].asset_id, (err, upload) ->
-				client.uploads.upload upload, (err) ->
-					client.uploads.complete upload, ->
-						do done
-
-describe 'Parcels', ->
-	it 'should find a parcel', (done) ->
-		client.parcels.find id: parcelId, (err, parcel) ->
-			err.should.equal(no) and parcel.id.should.equal parcelId
+	it 'should upload file', (done) ->
+		client.uploads.upload files: [{ filename: testImage, size: fs.statSync(testImage).size, md5: require('crypto').createHash('md5').update(fs.readFileSync(testImage, 'utf-8')).digest('hex') }], chutes: [chuteId], (err, assets) ->
+			assetId = assets[0]
 			do done
 
 describe 'Bundles', ->

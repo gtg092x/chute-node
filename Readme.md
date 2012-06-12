@@ -122,6 +122,7 @@ client.assets.heart({ id: 12345 }, function(err, asset){
 client.assets.unheart({ id: 12345 }, function(err, asset){
 	// -1 to asset with ID=12345
 });
+```
 
 Remove:
 

@@ -1,6 +1,6 @@
 # Chute
 
-Chute is obviously API client for [Chute](http://getchute.com).
+This package provides a wrapper for the Chute API.  You can learn more about Chute [http://getchute.com](http://getchute.com) and explore the API at [http://picture.io](http://picture.io).
 
 # Installation
 

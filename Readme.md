@@ -1,6 +1,7 @@
 # Chute
 
-This package provides a wrapper for the Chute API.  You can learn more about Chute [http://getchute.com](http://getchute.com) and explore the API at [http://picture.io](http://picture.io).
+Chute makes it possible for you to easily organize, store and serve photos and videos.  This NPM package provides you with a wrapper for the Chute API.
+You can learn more about Chute [http://getchute.com](http://getchute.com) and explore the API at [http://picture.io](http://picture.io).
 
 # Installation
 
@@ -8,7 +9,7 @@ This package provides a wrapper for the Chute API.  You can learn more about Chu
 
 # Getting Started
 
-1. Sign up at [Chute](http://auth.getchute.com/signup?authorization=4f541b8e38ecef3f4d000001)
+1. Sign up for an account at [Chute](http://auth.getchute.com/signup?authorization=4f541b8e38ecef3f4d000001)
 2. Install this library
 3. Read the [API docs](http://explore.picture.io) for better understanding
 4. Read the [annotated source](http://chute.github.com/chute-node/docs/chute.html) for even better understanding of what's under the hood
@@ -27,6 +28,8 @@ client.set({
 ```
 
 ## Chutes
+
+Chutes allow you to manage sets of photos - you can think of them like albums.
 
 Find:
 
@@ -98,6 +101,8 @@ client.chutes.remove({ id: 12345 }, function(err){
 
 ## Assets
 
+Assets represent photos and videos contained within a Chute.
+
 Find:
 
 ```javascript
@@ -146,6 +151,8 @@ client.assets.remove({ id: 12345 }, function(err){
 
 ## Bundles
 
+Bundles allow you to create dynamic sets of photos
+
 Find:
 
 ```javascript
@@ -174,6 +181,8 @@ client.bundles.remove({ id: 12345 }, function(err){
 ```
 
 ## Uploads
+
+Chute provides a simple upload flow that provides image processing and more.
 
 ```javascript
 // info about files

@@ -1,0 +1,276 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>chute-node by chute</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/chute/chute-node">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/chute/chute-node/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/chute/chute-node/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>chute-node</h1>
+          <p>Node.js Module for Chute API </p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/chute">chute</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>Chute</h1>
+
+<p>Chute makes it possible for you to easily organize, store and serve photos and videos.  This NPM package provides you with a wrapper for the Chute API.</p>
+
+<p>You can learn more about Chute <a href="http://getchute.com">http://getchute.com</a> and explore the API at <a href="http://picture.io">http://picture.io</a>.</p>
+
+<h1>Installation</h1>
+
+<p><code>npm install chute</code></p>
+
+<h1>Getting Started</h1>
+
+<ol>
+<li>Sign up for an account at <a href="http://auth.getchute.com/signup?authorization=4f541b8e38ecef3f4d000001">Chute</a>
+</li>
+<li>Install this library</li>
+<li>Read the <a href="http://explore.picture.io">API docs</a> for better understanding</li>
+<li>Read the <a href="http://chute.github.com/chute-node/docs/chute.html">annotated source</a> for even better understanding of what's under the hood</li>
+</ol><h1>Usage</h1>
+
+<p>Initialize:</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">Chute</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'chute'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chute</span><span class="p">;</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span>
+    <span class="nx">token</span><span class="o">:</span> <span class="s1">'access token'</span><span class="p">,</span>
+    <span class="nx">id</span><span class="o">:</span> <span class="s1">'app id'</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Chutes</h2>
+
+<p>Chutes allow you to manage sets of photos - you can think of them like albums.</p>
+
+<p>Find:</p>
+
+<div class="highlight">
+<pre><span class="c1">// all chutes found</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">chutes</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">chutes</span><span class="p">){</span>
+    <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">chutes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">chute</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// chute with ID=12345 found</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">chutes</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">chute</span><span class="p">){</span>
+    <span class="nx">chute</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// chute with ID=12345 found with contributors list inside</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">chutes</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span><span class="p">,</span> <span class="nx">contributors</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">chute</span><span class="p">){</span>
+    <span class="nx">chute</span><span class="p">.</span><span class="nx">contributors</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// chute with ID=12345 found with members list inside</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">chutes</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span><span class="p">,</span> <span class="nx">members</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">chute</span><span class="p">){</span>
+    <span class="nx">chute</span><span class="p">.</span><span class="nx">members</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// chute with ID=12345 found with parcels list inside</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">chutes</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span><span class="p">,</span> <span class="nx">parcels</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">chute</span><span class="p">){</span>
+    <span class="nx">chute</span><span class="p">.</span><span class="nx">parcels</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// chute with ID=12345 found with everything inside</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">chutes</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
+    <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span><span class="p">,</span>
+    <span class="nx">contributors</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">members</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="nx">parcels</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">chute</span><span class="p">){</span>
+    <span class="nx">chute</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Create:</p>
+
+<div class="highlight">
+<pre><span class="c1">// chute created</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">chutes</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">'Testing'</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">chute</span><span class="p">){</span>
+    <span class="nx">chute</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Update:</p>
+
+<div class="highlight">
+<pre><span class="c1">// chute with ID=235345 changed name to 'New name'</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">chutes</span><span class="p">.</span><span class="nx">update</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">235345</span><span class="p">,</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">'New name'</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">chute</span><span class="p">){</span>
+    <span class="nx">chute</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Remove:</p>
+
+<div class="highlight">
+<pre><span class="c1">// chute with ID=12345 removed</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">chutes</span><span class="p">.</span><span class="nx">remove</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">){</span>
+
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Assets</h2>
+
+<p>Assets represent photos and videos contained within a Chute.</p>
+
+<p>Find:</p>
+
+<div class="highlight">
+<pre><span class="c1">// asset with ID=12345 found</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">assets</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">asset</span><span class="p">){</span>
+    <span class="nx">asset</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// asset with ID=12345 found with comments inside</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">assets</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span><span class="p">,</span> <span class="nx">comments</span><span class="o">:</span> <span class="kc">true</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">asset</span><span class="p">){</span>
+    <span class="nx">asset</span><span class="p">.</span><span class="nx">comments</span><span class="p">;</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Customize:</p>
+
+<div class="highlight">
+<pre><span class="nx">client</span><span class="p">.</span><span class="nx">assets</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">asset</span><span class="p">){</span>
+    <span class="nx">asset</span><span class="p">.</span><span class="nx">url</span> <span class="c1">// http://media.getchute.com/media/:id</span>
+    <span class="nx">asset</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">width</span><span class="p">(</span><span class="mi">640</span><span class="p">)</span> <span class="c1">// http://media.getchute.com/media/:id/w/640</span>
+    <span class="nx">asset</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">height</span><span class="p">(</span><span class="mi">480</span><span class="p">)</span> <span class="c1">// http://media.getchute.com/media/:id/h/480</span>
+    <span class="nx">asset</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">fill</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span> <span class="c1">// http://media.getchute.com/media/:id/640x480</span>
+    <span class="nx">asset</span><span class="p">.</span><span class="nx">url</span><span class="p">.</span><span class="nx">fit</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">480</span><span class="p">)</span> <span class="c1">// http://media.getchute.com/media/:id/fit/640x480</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Like:</p>
+
+<div class="highlight">
+<pre><span class="nx">client</span><span class="p">.</span><span class="nx">assets</span><span class="p">.</span><span class="nx">heart</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">asset</span><span class="p">){</span>
+    <span class="c1">// +1 to asset with ID=12345</span>
+<span class="p">});</span>
+
+<span class="nx">client</span><span class="p">.</span><span class="nx">assets</span><span class="p">.</span><span class="nx">unheart</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">asset</span><span class="p">){</span>
+    <span class="c1">// -1 to asset with ID=12345</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Remove:</p>
+
+<div class="highlight">
+<pre><span class="nx">client</span><span class="p">.</span><span class="nx">assets</span><span class="p">.</span><span class="nx">remove</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">){</span>
+    <span class="c1">// asset with ID=12345 removed</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Bundles</h2>
+
+<p>Bundles allow you to create dynamic sets of photos</p>
+
+<p>Find:</p>
+
+<div class="highlight">
+<pre><span class="c1">// bundle with ID=12345</span>
+<span class="nx">client</span><span class="p">.</span><span class="nx">bundles</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">bundle</span><span class="p">){</span>
+    <span class="nx">bundle</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Create:</p>
+
+<div class="highlight">
+<pre><span class="nx">client</span><span class="p">.</span><span class="nx">bundles</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+    <span class="nx">ids</span><span class="o">:</span> <span class="p">[</span><span class="mi">134234</span><span class="p">,</span> <span class="mi">534125</span><span class="p">]</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">bundle</span><span class="p">){</span>
+    <span class="c1">// bundle with assets 134234 and 534125 created</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<p>Remove:</p>
+
+<div class="highlight">
+<pre><span class="nx">client</span><span class="p">.</span><span class="nx">bundles</span><span class="p">.</span><span class="nx">remove</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">12345</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">){</span>
+    <span class="c1">// bundle with ID=12345 removed</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>Uploads</h2>
+
+<p>Chute provides a simple upload flow that provides image processing and more.</p>
+
+<div class="highlight">
+<pre><span class="c1">// info about files</span>
+<span class="kd">var</span> <span class="nx">files</span> <span class="o">=</span> <span class="p">[{</span> <span class="nx">filename</span><span class="o">:</span> <span class="s1">'image.jpg'</span><span class="p">,</span> <span class="nx">size</span><span class="o">:</span> <span class="mi">124235</span><span class="p">,</span> <span class="nx">md5</span><span class="o">:</span> <span class="s1">'0cc175b9c0f1b6a831c399e269772661'</span> <span class="p">}];</span>
+<span class="c1">// ID of chute which you want upload image to</span>
+<span class="kd">var</span> <span class="nx">chutes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12423523</span><span class="p">];</span>
+
+<span class="nx">client</span><span class="p">.</span><span class="nx">uploads</span><span class="p">.</span><span class="nx">upload</span><span class="p">({</span> <span class="nx">files</span><span class="o">:</span> <span class="nx">files</span><span class="p">,</span> <span class="nx">chutes</span><span class="o">:</span> <span class="nx">chutes</span> <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">assets</span><span class="p">){</span>
+    <span class="c1">// assets is an array of asset IDs, which were just uploaded</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h1>Tests</h1>
+
+<p>Put your app credentials(access token and id) into test and run it with:
+<code>mocha --timeout 10000</code></p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>

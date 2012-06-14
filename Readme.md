@@ -11,6 +11,7 @@ This package provides a wrapper for the Chute API.  You can learn more about Chu
 1. Sign up at [Chute](http://auth.getchute.com/signup?authorization=4f541b8e38ecef3f4d000001)
 2. Install this library
 3. Read the [API docs](http://explore.picture.io) for better understanding
+4. Read the [annotated source](http://chute.github.com/chute-node/docs/chute.html) for even better understanding of what's under the hood
 
 # Usage
 
@@ -21,7 +22,7 @@ var Chute = require('chute');
 var client = new Chute;
 client.set({
 	token: 'access token',
-	id: 'app id, optional'
+	id: 'app id'
 });
 ```
 
@@ -30,29 +31,35 @@ client.set({
 Find:
 
 ```javascript
-client.chutes.all(function(err, chutes){ // all chutes found
+// all chutes found
+client.chutes.all(function(err, chutes){
 	for(var i = 0; i < chutes.length; i++) {
 		chute.id;
 	}
 });
 
-client.chutes.find({ id: 12345 }, function(err, chute){ // chute with ID=12345 found
+// chute with ID=12345 found
+client.chutes.find({ id: 12345 }, function(err, chute){
 	chute.id;
 });
 
-client.chutes.find({ id: 12345, contributors: true }, function(err, chute){ // chute with ID=12345 found with contributors list inside
+// chute with ID=12345 found with contributors list inside
+client.chutes.find({ id: 12345, contributors: true }, function(err, chute){
 	chute.contributors;
 });
 
-client.chutes.find({ id: 12345, members: true }, function(err, chute){ // chute with ID=12345 found with members list inside
+// chute with ID=12345 found with members list inside
+client.chutes.find({ id: 12345, members: true }, function(err, chute){
 	chute.members;
 });
 
-client.chutes.find({ id: 12345, parcels: true }, function(err, chute){ // chute with ID=12345 found with parcels list inside
+// chute with ID=12345 found with parcels list inside
+client.chutes.find({ id: 12345, parcels: true }, function(err, chute){
 	chute.parcels;
 });
 
-client.chutes.find({ // chute with ID=12345 found with everything inside
+// chute with ID=12345 found with everything inside
+client.chutes.find({
 	id: 12345,
 	contributors: true,
 	members: true,
@@ -65,7 +72,8 @@ client.chutes.find({ // chute with ID=12345 found with everything inside
 Create:
 
 ```javascript
-client.chutes.create({ name: 'Testing' }, function(err, chute){ // chute created
+// chute created
+client.chutes.create({ name: 'Testing' }, function(err, chute){
 	chute.id;
 });
 ```
@@ -73,7 +81,8 @@ client.chutes.create({ name: 'Testing' }, function(err, chute){ // chute created
 Update:
 
 ```javascript
-client.chutes.update({ id: 235345, name: 'New name' }, function(err, chute){ // chute with ID=235345 changed name to 'New name'
+// chute with ID=235345 changed name to 'New name'
+client.chutes.update({ id: 235345, name: 'New name' }, function(err, chute){
 	chute.id;
 });
 ```
@@ -81,7 +90,8 @@ client.chutes.update({ id: 235345, name: 'New name' }, function(err, chute){ // 
 Remove:
 
 ```javascript
-client.chutes.remove({ id: 12345 }, function(err){ // chute with ID=12345 removed
+// chute with ID=12345 removed
+client.chutes.remove({ id: 12345 }, function(err){
 	
 });
 ```
@@ -91,11 +101,13 @@ client.chutes.remove({ id: 12345 }, function(err){ // chute with ID=12345 remove
 Find:
 
 ```javascript
-client.assets.find({ id: 12345 }, function(err, asset){ // asset with ID=12345 found
+// asset with ID=12345 found
+client.assets.find({ id: 12345 }, function(err, asset){
 	asset.id;
 });
 
-client.assets.find({ id: 12345, comments: true }, function(err, asset){ // asset with ID=12345 found with comments inside
+// asset with ID=12345 found with comments inside
+client.assets.find({ id: 12345, comments: true }, function(err, asset){
 	asset.comments;
 });
 ```
@@ -137,7 +149,8 @@ client.assets.remove({ id: 12345 }, function(err){
 Find:
 
 ```javascript
-client.bundles.find({ id: 12345 }, function(err, bundle){ // bundle with ID=12345
+// bundle with ID=12345
+client.bundles.find({ id: 12345 }, function(err, bundle){
 	bundle.id;
 });
 ```
@@ -163,8 +176,10 @@ client.bundles.remove({ id: 12345 }, function(err){
 ## Uploads
 
 ```javascript
-var files = [{ filename: 'image.jpg', size: 124235, md5: '0cc175b9c0f1b6a831c399e269772661' }]; // info about files
-var chutes = [12423523]; // ID of chute which you want upload image to
+// info about files
+var files = [{ filename: 'image.jpg', size: 124235, md5: '0cc175b9c0f1b6a831c399e269772661' }];
+// ID of chute which you want upload image to
+var chutes = [12423523];
 
 client.uploads.upload({ files: files, chutes: chutes }, function(err, assets){
 	// assets is an array of asset IDs, which were just uploaded

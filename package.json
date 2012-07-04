@@ -1,6 +1,6 @@
 {
 	"name": "chute",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"author": "Vadim Demedes <sbioko@gmail.com>",
 	"description": "API client for Chute platform.",
 	"keywords": ["chute"],
@@ -8,11 +8,10 @@
 		"node": ">=0.4"
 	},
 	"dependencies": {
-		"request": "2.9.202",
+		"request": "2.9.203",
 		"async": "0.1.22"
 	},
 	"devDependencies": {
-		"mocha": "*",
 		"should": "*"
 	},
 	"main": "./index.js",

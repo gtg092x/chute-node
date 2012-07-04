@@ -177,7 +177,7 @@ class Assets
 class Uploads
 	constructor: (@client) -> # getting link to client and ability to read options
 	
-	upload: (options, callback) -> # generating token for an upload
+	request: (options, callback) ->
 		request
 			url: "http://api.getchute.com/v2/uploads"
 			method: 'POST'
@@ -188,7 +188,21 @@ class Uploads
 		, (err, res, body) =>
 			return callback(err) if res.statusCode != 200
 			body = JSON.parse(body).data
-			
+			callback err, body
+	
+	complete: (options, callback) ->
+		id = options.id or options
+		
+		request
+			url: "http://api.getchute.com/v2/uploads/#{ id }/complete"
+			method: 'POST'
+			headers:
+				'x-client_id': @client.options.id
+				'Authorization': "OAUTH #{ @client.options.token }"
+		, (err, res, body) -> callback err
+	
+	upload: (options, callback) -> # generating token for an upload
+		@request options, (err, body) =>
 			assetIds = [] # pushing asset ids and returning them at the end
 			
 			assetIds.push(asset.id) for asset in body.existing_assets
@@ -208,13 +222,8 @@ class Uploads
 						body: file # Buffer
 					, (err, res, body) -> do nextAsset
 			, =>
-				request
-					url: "http://api.getchute.com/v2/uploads/#{ body.id }/complete"
-					method: 'POST'
-					headers:
-						'x-client_id': @client.options.id
-						'Authorization': "OAUTH #{ @client.options.token }"
-				, (err, res, body) -> callback err, assetIds
+				@complete id: body.id, (err) ->
+					callback err, assetIds
 
 class Chutes
 	constructor: (@client) -> # getting link to client and ability to get options

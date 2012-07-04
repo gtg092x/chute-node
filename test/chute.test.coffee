@@ -6,7 +6,7 @@ client = new Chute
 client.set token: 'access token', id: 'app id' # fill in your auth credentials
 
 assetId = parcelId = chuteId = bundleId = undefined
-testImage = '/Users/me/Desktop/Eye.jpg' # put some test image here
+testImage = '/Users/me/Desktop/Cat.jpg' # put some test image here
 
 describe 'Chutes', ->
 	it 'should create chute', (done) ->

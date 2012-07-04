@@ -38,7 +38,7 @@ class Chute # Main class, client
 			method: 'GET'
 			headers:
 				'x-client_id': @options.id
-				'Authorization': "OAUTH #{ @options.token }"
+				'Authorization': "OAuth #{ @options.token }"
 		, (err, res, body) ->
 			switch res.statusCode
 				when 201 then callback no, JSON.parse(body).data
@@ -54,7 +54,7 @@ class Bundles
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 			form:
 				asset_ids: JSON.stringify options.ids
 		, (err, res, body) ->
@@ -69,7 +69,7 @@ class Bundles
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) ->
 			switch res.statusCode
 				when 200 then callback no, JSON.parse(body).data
@@ -82,7 +82,7 @@ class Bundles
 			method: 'DELETE'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) ->
 			switch res.statusCode
 				when 200 then callback no, {}
@@ -98,7 +98,7 @@ class Assets
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) =>
 			switch res.statusCode
 				when 200
@@ -110,7 +110,7 @@ class Assets
 						method: 'GET'
 						headers:
 							'x-client_id': @client.options.id
-							'Authorization': "OAUTH #{ @client.options.token }"
+							'Authorization': "OAuth #{ @client.options.token }"
 					, (err, res, body) ->
 						switch res.statusCode
 							when 200
@@ -127,7 +127,7 @@ class Assets
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) ->
 			switch res.statusCode
 				when 200 then callback no
@@ -139,7 +139,7 @@ class Assets
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) ->
 			switch res.statusCode
 				when 200 then callback no
@@ -166,7 +166,7 @@ class Assets
 			form: form
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) ->
 			switch res.statusCode
 				when 200 then callback no, JSON.parse(body).data
@@ -184,7 +184,7 @@ class Uploads
 			body: JSON.stringify(files: options.files, chutes: options.chutes)
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) =>
 			return callback(err) if res.statusCode != 200
 			body = JSON.parse(body).data
@@ -198,7 +198,7 @@ class Uploads
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) -> callback err
 	
 	upload: (options, callback) -> # generating token for an upload
@@ -234,7 +234,7 @@ class Chutes
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) ->
 			switch res.statusCode
 				when 200 then callback no, JSON.parse(body).data
@@ -247,7 +247,7 @@ class Chutes
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 			form:
 				asset_ids: JSON.stringify(options.ids or options.assets)
 		, (err, res, body) ->
@@ -261,7 +261,7 @@ class Chutes
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 			form:
 				asset_ids: JSON.stringify(options.ids or options.assets)
 		, (err, res, body) ->
@@ -275,7 +275,7 @@ class Chutes
 			method: 'GET'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) =>
 			switch res.statusCode
 				when 200
@@ -288,7 +288,7 @@ class Chutes
 							method: 'GET'
 							headers:
 								'x-client_id': @client.options.id
-								'Authorization': "OAUTH #{ @client.options.token }"
+								'Authorization': "OAuth #{ @client.options.token }"
 						, (err, res, body) ->
 							chute.contributors = switch res.statusCode
 								when 200 then JSON.parse(body).data
@@ -302,7 +302,7 @@ class Chutes
 							method: 'GET'
 							headers:
 								'x-client_id': @client.options.id
-								'Authorization': "OAUTH #{ @client.options.token }"
+								'Authorization': "OAuth #{ @client.options.token }"
 						, (err, res, body) ->
 							chute.members = switch res.statusCode
 								when 200 then JSON.parse(body).data
@@ -316,7 +316,7 @@ class Chutes
 							method: 'GET'
 							headers:
 								'x-client_id': @client.options.id
-								'Authorization': "OAUTH #{ @client.options.token }"
+								'Authorization': "OAuth #{ @client.options.token }"
 						, (err, res, body) ->
 							chute.parcels = switch res.statusCode
 								when 200 then JSON.parse(body).data
@@ -339,7 +339,7 @@ class Chutes
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 			form:
 				'chute[name]': options.name
 		, (err, res, body) ->
@@ -354,7 +354,7 @@ class Chutes
 			method: 'PUT'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 			form:
 				'chute[name]': options.name
 		, (err, res, body) ->
@@ -372,7 +372,7 @@ class Chutes
 			method: 'DELETE'
 			headers:
 				'x-client_id': @client.options.id
-				'Authorization': "OAUTH #{ @client.options.token }"
+				'Authorization': "OAuth #{ @client.options.token }"
 		, (err, res, body) ->
 			switch res.statusCode
 				when 200 then callback no

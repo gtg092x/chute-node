@@ -203,12 +203,16 @@ class Uploads
 	
 	upload: (options, callback) -> # generating token for an upload
 		@request options, (err, body) =>
-			assetIds = [] # pushing asset ids and returning them at the end
+			assetIds = [] # pushing asset ids
+			assetShortcuts = [] # pushing asset shortcuts and returning all those at the end
 			
-			assetIds.push(asset.id) for asset in body.existing_assets
+			for asset in body.existing_assets
+				assetIds.push asset.id
+				assetShortcuts.push asset.shortcut
 			
 			async.forEach body.new_assets, (asset, nextAsset) =>
 				assetIds.push asset.id
+				assetShortcuts.push asset.shortcut
 				
 				fs.readFile asset.upload_info.file_path, (err, file) ->
 					request
@@ -223,7 +227,7 @@ class Uploads
 					, (err, res, body) -> do nextAsset
 			, =>
 				@complete id: body.id, (err) ->
-					callback err, assetIds
+					callback err, ids: assetIds, shortcuts: assetShortcuts
 
 class Chutes
 	constructor: (@client) -> # getting link to client and ability to get options

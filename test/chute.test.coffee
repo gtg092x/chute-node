@@ -58,7 +58,7 @@ describe 'Uploads', ->
 	
 	it 'should upload file', (done) ->
 		client.uploads.upload files: [{ filename: testImage, size: fs.statSync(testImage).size, md5: require('crypto').createHash('md5').update(fs.readFileSync(testImage, 'utf-8')).digest('hex') }], chutes: [chuteId], (err, assets) ->
-			assetId = assets[0]
+			assetId = assets.ids[0]
 			do done
 
 describe 'Bundles', ->

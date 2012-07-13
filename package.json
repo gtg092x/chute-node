@@ -1,6 +1,6 @@
 {
 	"name": "chute",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"author": "Vadim Demedes <sbioko@gmail.com>",
 	"description": "API client for Chute platform.",
 	"keywords": ["chute"],

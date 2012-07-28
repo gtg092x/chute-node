@@ -199,3 +199,7 @@ client.uploads.upload({ files: files, chutes: chutes }, function(err, assets){
 
 Put your app credentials(access token and id) into test and run it with:
 `mocha --timeout 10000`
+
+# License
+
+&copy; Chute Corporation.

@@ -338,14 +338,17 @@ class Chutes
 				else callback JSON.parse(body).error, []
 	
 	create: (options, callback) -> # creating chute, options should be { name: 'Name of the Chute' }
+		data = {}
+		for key of options
+			data["chute[#{ key }]"] = options[key] if options.hasOwnProperty key
+		
 		request
 			url: "http://api.getchute.com/v1/chutes"
 			method: 'POST'
 			headers:
 				'x-client_id': @client.options.id
 				'Authorization': "OAuth #{ @client.options.token }"
-			form:
-				'chute[name]': options.name
+			form: data
 		, (err, res, body) ->
 			switch res.statusCode
 				when 201 then callback no, JSON.parse(body).data

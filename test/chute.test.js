@@ -79,5 +79,15 @@ describe('Chute', function(){
         }
       });
     });
+    
+    it('should delete an album', function(done){
+      var album = new Chute.Album({ album: Test.album });
+      
+      album.destroy({
+        success: function(){
+          done();
+        }
+      });
+    });
   });
 });

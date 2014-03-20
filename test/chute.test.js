@@ -9,7 +9,11 @@ var Chute = require('../'),
       }
     };
 
-Chute.accessToken = process.env.TOKEN;
+var accessToken = process.env.TOKEN || JSON.parse(require('fs').readFileSync(__dirname+'/../.chute.json','utf8')).token;
+
+var chute = new Chute({
+    token:accessToken
+});
 
 require('should');
 

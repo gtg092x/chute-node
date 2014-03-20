@@ -1,25 +1,28 @@
 {
-	"name": "chute",
-	"version": "0.2.0",
-	"author": "Chute <developers@getchute.com>",
-	"description": "API client for Chute platform.",
-	"keywords": ["chute"],
-	"engine": {
-		"node": ">=0.6"
-	},
-	"dependencies": {
-		"request": "2.16.6",
-		"async": "0.2.7",
-		"lodash": "1.1.1",
-		"backbone": "1.0.0"
-	},
-	"devDependencies": {
-		"should": "*"
-	},
-	"main": "./index.js",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/chute/chute-node.git"
-	},
-	"license": "MIT"
+  "name": "chute",
+  "version": "0.2.0",
+  "author": "Chute <developers@getchute.com>",
+  "description": "API client for Chute platform.",
+  "keywords": [
+    "chute"
+  ],
+  "engine": {
+    "node": ">=0.6"
+  },
+  "dependencies": {
+    "request": "2.16.6",
+    "async": "0.2.7",
+    "lodash": "1.1.1",
+    "backbone": "1.0.0",
+    "backbone-request": "0.0.1"
+  },
+  "devDependencies": {
+    "should": "*"
+  },
+  "main": "./index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chute/chute-node.git"
+  },
+  "license": "MIT"
 }
